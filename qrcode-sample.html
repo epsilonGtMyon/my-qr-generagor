@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="./libs/qrcode/qrcode.js"></script>
+  <title>qrcode-sample</title>
+</head>
+<body>
+  <input type="text" id="sourceText" />
+  <input type="color" id="sourceColor" value="#000000"/>
+  <button id="generateButton">作成</button>
+
+  <div>
+    <svg width="200" height="200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <g id="qrImage"/>
+    </svg>
+  </div>
+  <div>
+    <button id="saveAsSVGButton">SVGとして保存</button>
+  </div>
+
+  <script>
+    (function(){
+      const sourceTextElem = document.querySelector('#sourceText')
+      const sourceColorElem = document.querySelector('#sourceColor')
+      const generateButtonElem = document.querySelector('#generateButton')
+      const qrImageElem = document.querySelector('#qrImage')
+      const saveAsSVGButtonElem = document.querySelector('#saveAsSVGButton')
+
+      function clearQrImage() {
+        while (qrImageElem.firstChild) {
+          qrImageElem.removeChild(qrImageElem.firstChild);
+        }
+      }
+
+      generateButtonElem.addEventListener('click', () => {
+        const text = sourceTextElem.value
+        const color = sourceColorElem.value
+
+        clearQrImage()
+        const qrcode = new QRCode(qrImageElem, {
+          width : 200,
+          height : 200,
+	        colorDark : color,
+          useSVG: true
+        });
+	      qrcode.makeCode(text);
+      })
+
+      saveAsSVGButtonElem.addEventListener('click', () => {
+        const svgText = new XMLSerializer().serializeToString(qrImageElem.parentNode);
+        const svgBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+        const svgUrl = URL.createObjectURL(svgBlob);
+        
+        const a = document.createElement('a');
+        a.href = svgUrl;
+        a.download = 'qrcode';
+
+        document.body.appendChild(a);
+        a.click();
+
+        document.body.removeChild(a);
+        URL.revokeObjectURL(svgUrl);
+      }) 
+
+    })()
+  </script>
+  
+</body>
+</html>

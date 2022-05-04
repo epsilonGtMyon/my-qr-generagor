@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="./libs/qrcode/qrcode.js" defer></script>
+  <script src="./libs/bootstrap/bootstrap.bundle.min.js" defer></script>
+  <script src="./script.js" defer></script>
+  <link rel="stylesheet" href="./libs/bootstrap/bootstrap.min.css">
+  <link rel="manifest" href="./manifest.json">
+  <title>QR生成</title>
+  <script>
+    
+  if ("serviceWorker" in navigator) {
+    const isLocal = location.hostname === 'localhost'
+    if (isLocal) {
+      navigator.serviceWorker.register("./sw.js");
+    } else {
+      navigator.serviceWorker.register("./sw.js", {scope: '/my-qr-generator/'});
+    }
+  }
+  </script>
+</head>
+<body class="pt-5">
+  <nav class="navbar fixed-top navbar-dark bg-success">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">QR生成</a>
+    </div>
+  </nav>
+  <div class="p-2">
+    ホームに追加すると オフラインでも使用することができます。
+    <form>
+      <!-- 生成文字列 -->
+      <div class="mb-3">
+        <label for="sourceText" class="form-label">文字列</label>
+        <textarea id="sourceText" class="form-control" rows="3" placeholder="http://example.com"></textarea>
+        
+        <div class="form-text">
+          QRコードを生成したい文字列を入力してください。
+        </div>
+      </div>
+      
+      <!-- 色 -->
+      <div class="mb-3">
+        <label for="sourceColor" class="form-label">QRの色</label>
+        <input id="sourceColor" type="color" class="form-control form-control-color" value="#000000" title="色">
+      </div>
+      
+      <!-- 生成 -->
+      <div class="mb-3">
+        <button id="generateButton" type="button" class="btn btn-success">生成</button>
+      </div>
+    </form>
+    
+    <div id="imageContainer" class="invisible">
+      <div class="mb-3">
+        <svg width="200" height="200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <g id="qrImage"/>
+        </svg>
+      </div>
+      <div class="mb-3">
+        <button id="saveAsSVGButton" type="button" class="btn btn-success">SVGとして保存</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
