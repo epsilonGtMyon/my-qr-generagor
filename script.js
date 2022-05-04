@@ -4,6 +4,7 @@
   const generateButtonElem = document.querySelector("#generateButton");
   const imageContainerElem = document.querySelector("#imageContainer");
   const qrImageElem = document.querySelector("#qrImage");
+  const saveImageButtonElem = document.querySelector("#saveImageButton");
   const saveAsSVGButtonElem = document.querySelector("#saveAsSVGButton");
 
   function clearQrImage() {
@@ -48,10 +49,40 @@
     }
   });
 
+  saveImageButtonElem.addEventListener("click", () => {
+    // ここの変換の仕方は今回の本質ではないので 適当に実装
+    //https://zenn.dev/skryo/articles/7d7f1ce601510b
+
+    const svgNode = qrImageElem.parentNode;
+    const svgText = new XMLSerializer().serializeToString(svgNode);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = svgNode.width.baseVal.value;
+    canvas.height = svgNode.height.baseVal.value;
+
+    const ctx = canvas.getContext("2d");
+    const image = new Image();
+    image.onload = () => {
+      ctx.drawImage(image, 0, 0);
+      const a = document.createElement("a");
+      const svgUrl = canvas.toDataURL("image/png");
+      a.href = svgUrl
+      a.download = `qrcode-${getFileSuffix()}`;
+      
+      document.body.appendChild(a);
+      a.click();
+
+      document.body.removeChild(a);
+      URL.revokeObjectURL(svgUrl);
+    };
+    image.src =
+      "data:image/svg+xml;charset=utf-8;base64," +
+      btoa(unescape(encodeURIComponent(svgText)));
+  });
+
   saveAsSVGButtonElem.addEventListener("click", () => {
-    const svgText = new XMLSerializer().serializeToString(
-      qrImageElem.parentNode
-    );
+    const svgNode = qrImageElem.parentNode;
+    const svgText = new XMLSerializer().serializeToString(svgNode);
     const svgBlob = new Blob([svgText], {
       type: "image/svg+xml;charset=utf-8",
     });
@@ -85,11 +116,13 @@
   //--
   //service worker
   if ("serviceWorker" in navigator) {
-    const isLocal = location.hostname === 'localhost'
+    const isLocal = location.hostname === "localhost";
     if (isLocal) {
       navigator.serviceWorker.register("./sw.js");
     } else {
-      navigator.serviceWorker.register("./sw.js", {scope: '/my-qr-generator/'});
+      navigator.serviceWorker.register("./sw.js", {
+        scope: "/my-qr-generator/",
+      });
     }
   }
 })();
