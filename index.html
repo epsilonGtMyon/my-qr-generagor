@@ -10,17 +10,6 @@
   <link rel="stylesheet" href="./libs/bootstrap/bootstrap.min.css">
   <link rel="manifest" href="./manifest.json">
   <title>QR生成</title>
-  <script>
-    
-  if ("serviceWorker" in navigator) {
-    const isLocal = location.hostname === 'localhost'
-    if (isLocal) {
-      navigator.serviceWorker.register("./sw.js");
-    } else {
-      navigator.serviceWorker.register("./sw.js", {scope: '/my-qr-generator/'});
-    }
-  }
-  </script>
 </head>
 <body class="pt-5">
   <nav class="navbar fixed-top navbar-dark bg-success">
