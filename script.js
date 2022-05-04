@@ -81,4 +81,15 @@
     sourceTextElem.value = sourceText;
     generateButtonElem.click();
   })();
+
+  //--
+  //service worker
+  if ("serviceWorker" in navigator) {
+    const isLocal = location.hostname === 'localhost'
+    if (isLocal) {
+      navigator.serviceWorker.register("./sw.js");
+    } else {
+      navigator.serviceWorker.register("./sw.js", {scope: '/my-qr-generator/'});
+    }
+  }
 })();
