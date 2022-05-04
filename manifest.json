@@ -2,9 +2,9 @@
     "theme_color": "#198754",
     "background_color": "#ffffff",
     "display": "standalone",
-    "scope": "/my-qr-generagor/",
-    "start_url": "/my-qr-generagor/index.html",
-    "name": "my-qr-generagor",
+    "scope": "/my-qr-generator/",
+    "start_url": "/my-qr-generator/index.html",
+    "name": "my-qr-generator",
     "short_name": "my-qr",
     "description": "QR\u751f\u6210",
     "icons": [
