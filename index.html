@@ -20,6 +20,22 @@
   <meta name="twitter:title" content="my-qr-generator🥳">
   <meta name="twitter:image" content="https://epsilongtmyon.github.io/my-qr-generator/icon-192x192.png">
   <meta name="twitter:description" content="QR生成">
+  <script>
+   window.addEventListener("load", () => {
+    //service worker
+    if ("serviceWorker" in navigator) {
+      const isLocal = location.hostname === "localhost";
+      if (isLocal) {
+        navigator.serviceWorker.register("./sw.js");
+      } else {
+        navigator.serviceWorker.register("./sw.js", {
+          scope: "/my-qr-generator/",
+        });
+      }
+    }
+   }) 
+
+  </script>
 </head>
 <body class="pt-5">
   <nav class="navbar fixed-top navbar-dark bg-success">
