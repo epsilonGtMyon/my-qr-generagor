@@ -6,6 +6,12 @@
   const qrImageElem = document.querySelector("#qrImage");
   const saveImageButtonElem = document.querySelector("#saveImageButton");
   const saveAsSVGButtonElem = document.querySelector("#saveAsSVGButton");
+  const shareButtonElem = document.querySelector("#shareButton");
+
+  let lastQrParameter = {
+    sourceText: "",
+    sourceColor: ""
+  }
 
   function clearQrImage() {
     while (qrImageElem.firstChild) {
@@ -29,6 +35,9 @@
   generateButtonElem.addEventListener("click", () => {
     const text = sourceTextElem.value;
     const color = sourceColorElem.value;
+
+    lastQrParameter.sourceText = text
+    lastQrParameter.sourceColor = color
 
     clearQrImage();
 
@@ -99,17 +108,33 @@
     URL.revokeObjectURL(svgUrl);
   });
 
+  shareButtonElem.addEventListener("click", () => {
+    const param = new URLSearchParams();
+    param.append("sourceText", lastQrParameter.sourceText)
+    param.append("sourceColor", lastQrParameter.sourceColor)
+
+    navigator.share({
+      title: "QR生成",
+      text: "QR生成",
+      url: "?" + param.toString()
+    })
+  });
+
   //--------------------------------
   //onload
   (function () {
     const param = new URLSearchParams(location.search);
     const sourceText = param.get("sourceText");
+    const sourceColor = param.get("sourceColor");
 
     if (!sourceText) {
       return;
     }
 
     sourceTextElem.value = sourceText;
+    if (sourceColor){
+      sourceColorElem.value = sourceColor;
+    }
     generateButtonElem.click();
   })();
 })();

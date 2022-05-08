@@ -1,6 +1,6 @@
 (function () {
   const appName = "my-qr-generator";
-  const cacheName = `${appName}-V1`;
+  const cacheName = `${appName}-V2`;
   const isLocal = location.hostname === "localhost";
   const prefix = isLocal ? "/" : "/my-qr-generator/";
 
